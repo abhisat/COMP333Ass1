@@ -1,16 +1,18 @@
 package optimalBreaks;
 
-import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class assignment1Tests {
 	
 	@Test
 	public void testEmptybreakList() {
 		BreakSchedule x= new BreakSchedule();
+
 		String w= "Holiday";
 		ArrayList<Integer> b= null;
 		assertEquals(0, x.totalCost(w,b));
