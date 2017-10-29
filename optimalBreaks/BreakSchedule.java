@@ -2,6 +2,7 @@ package optimalBreaks;
 
 import java.util.ArrayList;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BreakSchedule {
 
@@ -19,41 +20,60 @@ public class BreakSchedule {
     //                the position of each each break is specified by the integers in breakList.
     //                Refer to the assignment specification for how a single break contributes to the cost.
 
-    int [][][][] table;
+    int[][][][] table;
+
     int totalCost(String word, List<Integer> breakList) { // TODO Complete for Task 2
 
         int zero = 0;
-        int indexLength = word.length()-1;
+        int indexLength = word.length() - 1;
         int first = 0;
         int last = 0;
-        if(breakList != null)   last = breakList.size() - 1;
+        if (breakList != null) {
+            //if (breakList.size() < 1)
+            last = breakList.size() - 1;
+            //else last = 1;
+        }
 
         //table = new int[indexLength][indexLength][breakList.size()][breakList.size()];
         if (breakList != null) {
 
-            if (zero == indexLength || last <= 0) {
+            if (indexLength <= zero) {
+                return 0;
+            } else if (last < 0) {
                 return 0;
             } else if (breakList.size() == 1 && breakList.get(0) == indexLength) {
                 return 0;
             } else if (!(breakList.contains(zero)) || !(breakList.contains(indexLength))) {
+                breakList.stream().map((i) -> i = i - breakList.get(0));
                 return (indexLength - zero + 1) +
                         Math.min(
                                 totalCost(
                                         word.substring(zero, breakList.get(first)),
-                                        breakList.subList(0, first )),
+                                        breakList.subList(0, first)),
                                 totalCost(
                                         word.substring(breakList.get(first) + 1),
-                                        breakList.subList(first, breakList.size())
+                                        breakList.subList(first, breakList.size()).stream().map((i) -> i - breakList.get(0)).collect(Collectors.toList())
                                 )
                         );
-            } else if (first == zero) {
-                return totalCost(word.substring(zero + 1, indexLength + 1), breakList.subList(1, breakList.size()));
-            }
+            } else if (breakList.get(first) == zero) {
+                return Math.min(
+                        totalCost(
+                                word.substring(zero, breakList.get(first)),
+                                breakList.subList(0, first)),
+                        Math.min(
+                                totalCost(
+                                        word.substring(breakList.get(first) + 1),
+                                        breakList.subList(first, breakList.size()).stream().map((i) -> i - breakList.get(0)).collect(Collectors.toList())
+                                ),
+                                totalCost(
+                                        word.substring(zero + 1, indexLength + 1), breakList.subList(1, breakList.size())
+                                )
+                        ));
 
-            return 0;
-        } else
-            return 0;
+            } else
+                return 0;
 
+        } else return 0;
     }
 
     // Precondition: word is a string and breakList is an array of integers in strictly increasing order
@@ -65,11 +85,9 @@ public class BreakSchedule {
         int zero = 0;
         int indexLength = word.length();
         int first = 0;
-        if (zero == indexLength || breakList.size() <= 0) {
+        if (breakList != null) {
             return null;
-        } else if (breakList.size() == 1 && breakList.get(0) == indexLength) {
-            return null;
-        }
-        return null;
+        } else return null;
     }
 }
+
