@@ -20,31 +20,29 @@ public class BreakSchedule {
     //                the position of each each break is specified by the integers in breakList.
     //                Refer to the assignment specification for how a single break contributes to the cost.
 
-    int[][][][] table;
+    int zero = 0;
+    int indexLength = 0;
+    int first = 0;
+    int last = 0;
+
+    ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> table = new ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>>();
 
     int totalCost(String word, List<Integer> breakList) { // TODO Complete for Task 2
 
-        int zero = 0;
-        int indexLength = word.length() - 1;
-        int first = 0;
-        int last = 0;
-        if (breakList != null) {
-            //if (breakList.size() < 1)
+
+        if (breakList != null && word != null && word.length()!= 0) {
+            indexLength = word.length() - 1;
             last = breakList.size() - 1;
-            //else last = 1;
         }
 
-        //table = new int[indexLength][indexLength][breakList.size()][breakList.size()];
-        if (breakList != null) {
+        if (breakList != null && word != null && word.length() != 0 && breakList.size() != 0) {
 
-            if (indexLength <= zero) {
+            if (breakList.size() == 1 && breakList.get(0) == indexLength) {
+                System.out.println("1");
                 return 0;
-            } else if (last < 0) {
-                return 0;
-            } else if (breakList.size() == 1 && breakList.get(0) == indexLength) {
-                return 0;
-            } else if (!(breakList.contains(zero)) || !(breakList.contains(indexLength))) {
+            } else if (!(breakList.contains(zero)) && !(breakList.contains(indexLength))) {
                 breakList.stream().map((i) -> i = i - breakList.get(0));
+                System.out.println("2");
                 return (indexLength - zero + 1) +
                         Math.min(
                                 totalCost(
@@ -56,24 +54,30 @@ public class BreakSchedule {
                                 )
                         );
             } else if (breakList.get(first) == zero) {
+                System.out.println("3");
                 return Math.min(
                         totalCost(
-                                word.substring(zero, breakList.get(first)),
-                                breakList.subList(0, first)),
+                                word.substring(zero, breakList.get(first) + 1),
+                                breakList.subList(0, first + 1)),
                         Math.min(
                                 totalCost(
                                         word.substring(breakList.get(first) + 1),
-                                        breakList.subList(first, breakList.size()).stream().map((i) -> i - breakList.get(0)).collect(Collectors.toList())
+                                        breakList.subList(first + 1, breakList.size()).stream().map((i) -> i - breakList.get(0)).collect(Collectors.toList())
                                 ),
                                 totalCost(
                                         word.substring(zero + 1, indexLength + 1), breakList.subList(1, breakList.size())
                                 )
                         ));
 
-            } else
+            } else{
+                System.out.println("4");
                 return 0;
+            }
 
-        } else return 0;
+        } else {
+            System.out.println("5");
+            return 0;
+        }
     }
 
     // Precondition: word is a string and breakList is an array of integers in strictly increasing order
